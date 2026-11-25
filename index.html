@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Camion Doré — Food truck burgers maison</title>
+<meta name="description" content="Food truck de burgers maison : carte, emplacements de la semaine, privatisation pour vos événements.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --noir:#1a1410; --creme:#fff8ec; --jaune:#ffb703; --orange:#fb8500; --rouge:#d62828;
+    --gris:#6b5e52; --carte:#ffffff; --bord:#f0e2c8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--creme);color:var(--noir);line-height:1.55}
+  h1,h2,h3{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:.02em;font-weight:400;line-height:1}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:var(--noir);color:var(--creme)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .logo{font-family:'Bebas Neue';font-size:1.7rem;color:var(--jaune);text-decoration:none}
+  .logo span{color:var(--creme)}
+  .links{display:flex;gap:22px;font-size:.92rem}
+  .links a{text-decoration:none;opacity:.85}
+  .links a:hover{opacity:1;color:var(--jaune)}
+  .btn{display:inline-block;background:var(--jaune);color:var(--noir);font-weight:700;padding:13px 24px;border-radius:999px;text-decoration:none;border:none;cursor:pointer;font-size:1rem;transition:transform .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.alt{background:transparent;color:var(--creme);border:2px solid var(--creme)}
+  .btn.sm{padding:9px 18px;font-size:.88rem}
+  @media(max-width:760px){.links{display:none}}
+
+  /* HERO */
+  .hero{background:radial-gradient(circle at 80% 20%,#3a2a1c 0,var(--noir) 60%);color:var(--creme);padding:70px 0 90px;overflow:hidden;position:relative}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  .tag{display:inline-block;background:var(--rouge);color:#fff;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:6px 12px;border-radius:4px;margin-bottom:18px}
+  .hero h1{font-size:clamp(3.2rem,8vw,5.8rem);color:var(--jaune)}
+  .hero h1 em{font-style:normal;color:var(--creme)}
+  .hero p{font-size:1.12rem;opacity:.85;margin:18px 0 28px;max-width:480px}
+  .hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .today{background:var(--creme);color:var(--noir);border-radius:18px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.4);transform:rotate(2deg)}
+  .today .live{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.8rem;text-transform:uppercase;color:var(--rouge);letter-spacing:.06em}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--rouge);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .today h3{font-size:2.2rem;margin:10px 0 4px}
+  .today .addr{color:var(--gris);margin-bottom:14px}
+  .today .hours{display:flex;gap:10px;flex-wrap:wrap}
+  .today .hours span{background:#fff1d6;padding:6px 12px;border-radius:8px;font-weight:600;font-size:.9rem}
+  .truck{font-size:4.5rem;text-align:right;margin-top:-10px}
+  @media(max-width:860px){.hero .wrap{grid-template-columns:1fr}.today{transform:none}}
+
+  /* BANDEAU */
+  .band{background:var(--jaune);padding:16px 0;overflow:hidden;white-space:nowrap;font-family:'Bebas Neue';font-size:1.5rem}
+  .band div{display:inline-block;animation:scroll 25s linear infinite}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  section{padding:80px 0}
+  .head{text-align:center;margin-bottom:44px}
+  .head small{color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.8rem}
+  .head h2{font-size:clamp(2.4rem,5vw,3.4rem);margin-top:6px}
+  .head p{color:var(--gris);max-width:560px;margin:10px auto 0}
+
+  /* SEMAINE */
+  .week{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+  .day{background:var(--carte);border:2px solid var(--bord);border-radius:14px;padding:20px}
+  .day.on{border-color:var(--orange);background:#fff4e2}
+  .day b{font-family:'Bebas Neue';font-size:1.6rem;display:block}
+  .day .lieu{font-weight:600;margin:6px 0 2px}
+  .day .h{color:var(--gris);font-size:.9rem}
+  .day.off{opacity:.55}
+  .note{text-align:center;margin-top:22px;color:var(--gris);font-size:.95rem}
+
+  /* CARTE */
+  .menu-sec{background:var(--noir);color:var(--creme)}
+  .menu-sec .head p{color:#cbbba6}
+  .tabs{display:flex;justify-content:center;gap:10px;margin-bottom:34px;flex-wrap:wrap}
+  .tab{background:transparent;color:var(--creme);border:2px solid #4a3a2c;padding:9px 20px;border-radius:999px;cursor:pointer;font-weight:600;font-family:inherit;font-size:.95rem}
+  .tab.active{background:var(--jaune);color:var(--noir);border-color:var(--jaune)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .item{background:#261d16;border-radius:16px;padding:22px;display:flex;gap:16px;align-items:flex-start}
+  .item .emo{font-size:2.4rem;background:#3a2a1c;border-radius:12px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .item .t{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+  .item h3{font-size:1.6rem;color:var(--jaune)}
+  .item .p{font-weight:700;font-size:1.1rem;white-space:nowrap}
+  .item p{color:#cbbba6;font-size:.93rem;margin-top:4px}
+  .badge{display:inline-block;font-size:.7rem;font-weight:700;background:var(--rouge);color:#fff;padding:2px 8px;border-radius:4px;margin-top:8px;text-transform:uppercase}
+  .badge.v{background:#2a9d8f}
+  .panel{display:none}.panel.show{display:grid}
+  .formule{margin-top:34px;background:var(--jaune);color:var(--noir);border-radius:18px;padding:26px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .formule h3{font-size:2rem}
+  .formule .prix{font-family:'Bebas Neue';font-size:3rem}
+
+  /* EVENEMENTS */
+  .ev{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  .ev-list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .ev-card{background:var(--carte);border:2px solid var(--bord);border-radius:14px;padding:20px}
+  .ev-card .i{font-size:1.8rem}
+  .ev-card h3{font-size:1.4rem;margin:6px 0 4px}
+  .ev-card p{font-size:.9rem;color:var(--gris)}
+  .ev-txt h2{font-size:clamp(2.4rem,5vw,3.4rem)}
+  .ev-txt p{color:var(--gris);margin:16px 0}
+  .ev-txt ul{list-style:none;margin:0 0 24px}
+  .ev-txt li{padding:7px 0;border-bottom:1px dashed var(--bord)}
+  .ev-txt li::before{content:"✓ ";color:var(--orange);font-weight:700}
+  @media(max-width:860px){.ev{grid-template-columns:1fr}}
+
+  /* AVIS */
+  .avis-sec{background:#fff1d6}
+  .avis{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  .av{background:#fff;border-radius:16px;padding:24px}
+  .av .s{color:var(--orange);letter-spacing:2px}
+  .av p{margin:10px 0;font-style:italic}
+  .av b{font-size:.9rem}
+  .exemple{text-align:center;font-size:.8rem;color:var(--gris);margin-top:16px}
+
+  /* CONTACT */
+  .contact{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+  .box{background:var(--carte);border:2px solid var(--bord);border-radius:18px;padding:28px}
+  .box h3{font-size:1.8rem;margin-bottom:14px}
+  .box .l{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--bord)}
+  form{display:grid;gap:12px}
+  input,select,textarea{width:100%;padding:12px 14px;border:2px solid var(--bord);border-radius:10px;font-family:inherit;font-size:1rem;background:var(--creme)}
+  textarea{min-height:90px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ok{display:none;background:#e6f6ef;color:#1d6b4f;padding:12px;border-radius:10px;font-weight:600}
+  @media(max-width:760px){.contact,.row{grid-template-columns:1fr}.ev-list{grid-template-columns:1fr}}
+
+  footer{background:var(--noir);color:#cbbba6;text-align:center;padding:34px 20px;font-size:.88rem}
+  footer .logo{display:block;margin-bottom:8px}
+
+  .float{position:fixed;bottom:18px;right:18px;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+  @media(min-width:761px){.float{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">LE CAMION <span>DORÉ</span></a>
+    <div class="links">
+      <a href="#semaine">Où nous trouver</a>
+      <a href="#carte">La carte</a>
+      <a href="#evenements">Privatisation</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="tel:0600000000" class="btn sm">📞 Commander</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="tag">🍔 Food truck artisanal</span>
+      <h1>Burgers maison <em>sur roues</em></h1>
+      <p>Pain brioché du boulanger, viande française hachée chaque matin, frites fraîches coupées sur place. On vient jusqu'à vous.</p>
+      <div class="ctas">
+        <a href="#carte" class="btn">Voir la carte</a>
+        <a href="#evenements" class="btn alt">Privatiser le camion</a>
+      </div>
+    </div>
+    <div class="today">
+      <div class="live"><span class="dot"></span> Aujourd'hui</div>
+      <h3>Place du Marché</h3>
+      <div class="addr">Centre-ville — devant la mairie</div>
+      <div class="hours"><span>11h30 – 14h00</span><span>18h30 – 21h30</span></div>
+      <div class="truck">🚚</div>
+    </div>
+  </div>
+</header>
+
+<div class="band"><div>🍔 BURGERS MAISON ★ FRITES FRAÎCHES ★ PRODUITS LOCAUX ★ VÉGÉ DISPO ★ PRIVATISATION ★ 🍔 BURGERS MAISON ★ FRITES FRAÎCHES ★ PRODUITS LOCAUX ★ VÉGÉ DISPO ★ PRIVATISATION ★&nbsp;</div></div>
+
+<section id="semaine">
+  <div class="wrap">
+    <div class="head">
+      <small>Planning</small>
+      <h2>Où nous trouver cette semaine</h2>
+      <p>Le camion bouge tous les jours. Retrouvez-nous ici, ou suivez-nous sur Instagram pour les changements de dernière minute.</p>
+    </div>
+    <div class="week">
+      <div class="day off"><b>Lundi</b><div class="lieu">Fermé</div><div class="h">On recharge les batteries</div></div>
+      <div class="day"><b>Mardi</b><div class="lieu">Zone d'activités Nord</div><div class="h">11h30 – 14h00</div></div>
+      <div class="day on"><b>Mercredi</b><div class="lieu">Place du Marché</div><div class="h">11h30 – 14h · 18h30 – 21h30</div></div>
+      <div class="day"><b>Jeudi</b><div class="lieu">Parking du stade</div><div class="h">18h30 – 21h30</div></div>
+      <div class="day"><b>Vendredi</b><div class="lieu">Parc des Expositions</div><div class="h">11h30 – 14h · 18h30 – 22h</div></div>
+      <div class="day"><b>Week-end</b><div class="lieu">Événements privés</div><div class="h">Sur réservation</div></div>
+    </div>
+    <p class="note">📍 Les emplacements peuvent changer selon la météo : un message est posté chaque matin sur Instagram.</p>
+  </div>
+</section>
+
+<section id="carte" class="menu-sec">
+  <div class="wrap">
+    <div class="head">
+      <small>La carte</small>
+      <h2>Ce qu'on vous prépare</h2>
+      <p>Tout est fait minute dans le camion. Les burgers sont servis avec frites maison.</p>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-t="burgers">Burgers</button>
+      <button class="tab" data-t="sides">À côté</button>
+      <button class="tab" data-t="desserts">Desserts & boissons</button>
+    </div>
+
+    <div class="grid panel show" id="burgers">
+      <div class="item"><div class="emo">🍔</div><div><div class="t"><h3>Le Classique</h3><span class="p">12 €</span></div><p>Steak 150 g, cheddar affiné, oignons caramélisés, salade, tomate, sauce maison.</p></div></div>
+      <div class="item"><div class="emo">🧀</div><div><div class="t"><h3>Le Montagnard</h3><span class="p">14 €</span></div><p>Steak 150 g, raclette fondue, poitrine fumée, oignons confits, sauce moutarde à l'ancienne.</p><span class="badge">Le best-seller</span></div></div>
+      <div class="item"><div class="emo">🌶️</div><div><div class="t"><h3>Le Brûlant</h3><span class="p">13 €</span></div><p>Steak 150 g, pepper jack, jalapeños, oignons frits, sauce chipotle fumée.</p></div></div>
+      <div class="item"><div class="emo">🐔</div><div><div class="t"><h3>Le Crispy</h3><span class="p">12 €</span></div><p>Poulet pané croustillant, coleslaw maison, cornichons, sauce miel-moutarde.</p></div></div>
+      <div class="item"><div class="emo">🌱</div><div><div class="t"><h3>Le Vert</h3><span class="p">12 €</span></div><p>Galette de légumes et pois chiches, chèvre frais, roquette, tomates confites, pesto.</p><span class="badge v">Végétarien</span></div></div>
+      <div class="item"><div class="emo">👶</div><div><div class="t"><h3>Menu Mini</h3><span class="p">8 €</span></div><p>Petit burger ou nuggets maison, frites, compote et jus de fruits. Jusqu'à 10 ans.</p></div></div>
+    </div>
+
+    <div class="grid panel" id="sides">
+      <div class="item"><div class="emo">🍟</div><div><div class="t"><h3>Frites maison</h3><span class="p">4 €</span></div><p>Pommes de terre fraîches coupées sur place, double cuisson.</p></div></div>
+      <div class="item"><div class="emo">🧀</div><div><div class="t"><h3>Frites cheddar-bacon</h3><span class="p">6 €</span></div><p>Nappées de cheddar fondu et éclats de bacon croustillant.</p></div></div>
+      <div class="item"><div class="emo">🧅</div><div><div class="t"><h3>Onion rings</h3><span class="p">5 €</span></div><p>Rondelles d'oignon panées, sauce barbecue maison.</p></div></div>
+      <div class="item"><div class="emo">🥗</div><div><div class="t"><h3>Salade du moment</h3><span class="p">7 €</span></div><p>Selon les légumes de saison du marché.</p></div></div>
+    </div>
+
+    <div class="grid panel" id="desserts">
+      <div class="item"><div class="emo">🍪</div><div><div class="t"><h3>Cookie géant</h3><span class="p">3,50 €</span></div><p>Chocolat noir et fleur de sel, servi tiède.</p></div></div>
+      <div class="item"><div class="emo">🍰</div><div><div class="t"><h3>Cheesecake</h3><span class="p">4,50 €</span></div><p>Coulis fruits rouges ou caramel beurre salé.</p></div></div>
+      <div class="item"><div class="emo">🥤</div><div><div class="t"><h3>Softs</h3><span class="p">2,50 €</span></div><p>Cola, limonade artisanale, thé glacé, eau.</p></div></div>
+      <div class="item"><div class="emo">🍺</div><div><div class="t"><h3>Bière locale</h3><span class="p">4,50 €</span></div><p>Brasserie artisanale de la région (selon emplacement).</p></div></div>
+    </div>
+
+    <div class="formule">
+      <div><h3>Formule midi</h3><div>Burger + frites + boisson, du mardi au vendredi</div></div>
+      <div class="prix">14,90 €</div>
+    </div>
+  </div>
+</section>
+
+<section id="evenements">
+  <div class="wrap ev">
+    <div class="ev-txt">
+      <small style="color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.8rem">Privatisation</small>
+      <h2>Le camion vient à votre événement</h2>
+      <p>Mariage, anniversaire, soirée d'entreprise ou fête de village : on s'installe, on cuisine sur place et vos invités se régalent. Vous n'avez rien à gérer.</p>
+      <ul>
+        <li>À partir de 30 personnes</li>
+        <li>Menu adapté à votre événement</li>
+        <li>Déplacement dans tout le département</li>
+        <li>Devis gratuit sous 48 h</li>
+      </ul>
+      <a href="#contact" class="btn">Demander un devis</a>
+    </div>
+    <div class="ev-list">
+      <div class="ev-card"><div class="i">💍</div><h3>Mariages</h3><p>Pour le vin d'honneur ou le brunch du lendemain.</p></div>
+      <div class="ev-card"><div class="i">🏢</div><h3>Entreprises</h3><p>Séminaires, repas d'équipe, inaugurations.</p></div>
+      <div class="ev-card"><div class="i">🎂</div><h3>Anniversaires</h3><p>Un repas qui change du traiteur classique.</p></div>
+      <div class="ev-card"><div class="i">🎪</div><h3>Festivals</h3><p>Marchés, concerts, événements sportifs.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="avis-sec">
+  <div class="wrap">
+    <div class="head"><small>Avis</small><h2>Ils sont repassés au camion</h2></div>
+    <div class="avis">
+      <div class="av"><div class="s">★★★★★</div><p>« Le Montagnard est une tuerie. Les frites sont vraiment faites maison, ça se sent. »</p><b>Client du mercredi</b></div>
+      <div class="av"><div class="s">★★★★★</div><p>« On les a fait venir pour notre mariage, les invités en parlent encore. Super organisés. »</p><b>Mariage, été dernier</b></div>
+      <div class="av"><div class="s">★★★★★</div><p>« Notre pause déj du vendredi. Rapide, généreux et toujours souriants. »</p><b>Équipe de bureau voisine</b></div>
+    </div>
+    <p class="exemple">Avis d'exemple : sur votre site, on met vos vrais avis clients.</p>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="head"><small>Contact</small><h2>Commander ou réserver</h2></div>
+    <div class="contact">
+      <div class="box">
+        <h3>Nous joindre</h3>
+        <div class="l">📞 <a href="tel:0600000000">06 00 00 00 00</a></div>
+        <div class="l">📸 <a href="#">@lecamiondore</a> — emplacement du jour</div>
+        <div class="l">✉️ <a href="mailto:contact@lecamiondore.fr">contact@lecamiondore.fr</a></div>
+        <div class="l">🕑 Commande par téléphone 30 min avant pour éviter l'attente</div>
+        <div class="l">💳 CB, espèces, tickets restaurant</div>
+      </div>
+      <div class="box">
+        <h3>Demande de privatisation</h3>
+        <form id="f">
+          <div class="row"><input placeholder="Votre nom" required><input type="tel" placeholder="Téléphone" required></div>
+          <div class="row">
+            <select required><option value="">Type d'événement</option><option>Mariage</option><option>Entreprise</option><option>Anniversaire</option><option>Autre</option></select>
+            <input type="number" placeholder="Nb d'invités" min="1">
+          </div>
+          <input type="date">
+          <textarea placeholder="Lieu, horaires, envies particulières..."></textarea>
+          <button class="btn" type="submit">Envoyer ma demande</button>
+          <div class="ok" id="ok">Merci ! On vous rappelle sous 48 h.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="logo">LE CAMION <span style="color:#fff8ec">DORÉ</span></span>
+  Burgers artisanaux sur roues — © Le Camion Doré
+</footer>
+
+<a href="tel:0600000000" class="btn float">📞 Commander</a>
+
+<script>
+  document.querySelectorAll('.tab').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});
+      document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('show')});
+      b.classList.add('active');
+      document.getElementById(b.dataset.t).classList.add('show');
+    });
+  });
+  document.getElementById('f').addEventListener('submit',function(e){
+    e.preventDefault();
+    document.getElementById('ok').style.display='block';
+    this.reset();
+  });
+</script>
+</body>
+</html>
